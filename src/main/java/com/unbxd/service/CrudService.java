@@ -1,28 +1,39 @@
 package com.unbxd.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.client.MongoCollection;
 import com.unbxd.dao.CrudCollections;
+import com.unbxd.dao.CrudCollectionsImpl;
 import com.unbxd.model.Student;
 import com.unbxd.util.MongoClient;
 
-public class CrudService {
-    private CrudCollections crud;
-    MongoClient mongo = new MongoClient();
-    public MongoCollection collection = mongo.mongoClient();
+import javax.inject.Inject;
 
-    public void insertInTo(MongoCollection collection) {
-        crud.insetInTo(collection);
+public class CrudService implements StudentService{
+    private CrudCollections crud = new CrudCollectionsImpl();
+    private com.mongodb.MongoClient mongoClient;
+
+    @Inject
+    public CrudService(MongoClient mgClient){
+        this.mongoClient = mgClient.getClient();
+        this.crud.insetInTo(this.mongoClient);
     }
 
-    public Student readCollection(int id) {
-        return crud.readCollection(collection, id);
+    @Override
+    public void insertInTo(MongoCollection collection) {
+        crud.insetInTo(mongoClient);
+    }
+
+    public Object readCollection(int id) throws JsonProcessingException {
+
+        return crud.readCollection(mongoClient, id);
     }
 
     public boolean updateCollection(int id) {
         if (((Object) id).getClass().getSimpleName() != "Integer") {
             return false;
         }
-        crud.updateCollection(collection, id);
+        crud.updateCollection(mongoClient, id);
         return true;
     }
 
@@ -30,14 +41,14 @@ public class CrudService {
         if (((Object) id).getClass().getSimpleName() != "Integer") {
             return false;
         }
-        crud.deleteCollection(collection,id);
+        crud.deleteCollection(mongoClient,id);
         return true;
     }
 
 
     public boolean insetNew (Student student){
         if (validate(student)) {
-            crud.insetNew(collection, student);
+            crud.insetNew(mongoClient, student);
             return true;
         } else {
             return false;

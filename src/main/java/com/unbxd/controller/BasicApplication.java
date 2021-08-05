@@ -2,7 +2,7 @@ package com.unbxd.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unbxd.model.Id;
+import com.google.inject.Inject;
 import com.unbxd.model.Student;
 import com.unbxd.service.CrudService;
 import org.slf4j.Logger;
@@ -14,7 +14,12 @@ public class BasicApplication extends Application {
 
     private static final Logger log = LoggerFactory.getLogger(BasicApplication.class);
 
-    CrudService crudService = new CrudService();
+    private final CrudService crudService;
+
+    @Inject
+    public BasicApplication(CrudService cdService){
+        this.crudService = cdService;
+    }
 
     @Override
     protected void onInit() {
@@ -59,64 +64,57 @@ public class BasicApplication extends Application {
         */
 
 
-        PUT("/student", routeContext -> {
+        POST("/student", routeContext -> {
 
             ObjectMapper objectMapper = new ObjectMapper();
             String readData = routeContext.getRequest().getBody();
+            System.out.println(readData);
             Student student = null;
             try {
                 student = objectMapper.readValue(readData, Student.class);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-            Boolean validation = crudService.insetNew(student);
-            if(validation == false){
+            boolean validation = crudService.insetNew(student);
+            if(!validation){
                 routeContext.flashError("Authentication failed");
             }
         });
 
-        GET("/student/read", routeContext -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String id = routeContext.getRequest().getBody();
-            Id id1 = null;
+        GET("/student/read/{id}", routeContext -> {
+            int id = routeContext.getParameter("id").toInt();
+
+            Object student = null;
             try {
-                id1 = objectMapper.readValue(id, Id.class);
+                student = crudService.readCollection(id);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-
-            System.out.println("id i get issssssssssssssss: " + id1.getId());
-            Student student = crudService.readCollection(id1.getId());
-            routeContext.json().send(student);
+            if(student instanceof String){
+                String stud = (String) student;
+                routeContext.send(stud);
+            }
+            else {
+                Student stud = (Student) student;
+                routeContext.json().send(student);
+            }
         });
 
-        DELETE("/student/delete", routeContext -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String id = routeContext.getRequest().getBody();
-            Id id1 = null;
-            try {
-                id1 = objectMapper.readValue(id, Id.class);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+        DELETE("/student/delete/{id}", routeContext -> {
 
-            System.out.println("id i get issssssssssssssss: " + id1.getId());
-            crudService.deleteCollection(id1.getId());
+            int id = routeContext.getParameter("id").toInt();
+
+            System.out.println("id i get issssssssssssssss: " + id);
+            crudService.deleteCollection(id);
 
         });
 
-        POST("/student/update", routeContext -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String id = routeContext.getRequest().getBody();
-            Id id1 = null;
-            try {
-                id1 = objectMapper.readValue(id, Id.class);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("id i get issssssssssssssss: " + id1.getId());
-            crudService.updateCollection(id1.getId());
+        GET("/student/update/{id}", routeContext -> {
+            System.out.println("hellloooo");
+            int id = routeContext.getParameter("id").toInt();
+            System.out.println("id i get issssssssssssssss: " + id);
+            crudService.updateCollection(id);
+            routeContext.send("Updated Successfully");
         });
 
 
