@@ -1,13 +1,14 @@
 package com.unbxd.dao;
 
-import com.mongodb.client.MongoCollection;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mongodb.MongoClient;
 import com.unbxd.model.Student;
-import org.bson.Document;
 
 public interface CrudCollections {
-    void insetInTo(MongoCollection collection);
-    Student readCollection(MongoCollection collection, int id);
-    void updateCollection(MongoCollection collection, int id);
-    long deleteCollection(MongoCollection collection, int id);
-    void insetNew(MongoCollection<Document> collection, Student student);
+    Object readCollection(MongoClient mongoClient, int id) throws JsonProcessingException;
+    void updateCollection(MongoClient mongoClient, int id);
+    long deleteCollection(MongoClient mongoClient, int id);
+    void insetNew(MongoClient mongoClient, Student student);
+
+    void insetInTo(MongoClient mongoClient);
 }

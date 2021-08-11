@@ -10,11 +10,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.unbxd.model.Student;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
-import static com.mongodb.client.model.Updates.set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CrudCollectionsImpl implements CrudCollections {
