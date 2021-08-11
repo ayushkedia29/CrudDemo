@@ -75,10 +75,13 @@ public class BasicApplication extends Application {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-            boolean validation = crudService.insetNew(student);
+            crudService.insetNew(student);
+            /*
             if(!validation){
                 routeContext.flashError("Authentication failed");
             }
+            */
+            routeContext.send("New document added successfully");
         });
 
         GET("/student/read/{id}", routeContext -> {
@@ -100,21 +103,33 @@ public class BasicApplication extends Application {
             }
         });
 
-        DELETE("/student/delete/{id}", routeContext -> {
+        GET("/student/delete/{id}", routeContext -> {
 
             int id = routeContext.getParameter("id").toInt();
 
             System.out.println("id i get issssssssssssssss: " + id);
-            crudService.deleteCollection(id);
-
+            String response = crudService.deleteCollection(id);
+            routeContext.send(response);
         });
 
-        GET("/student/update/{id}", routeContext -> {
+        POST("/student/update/{id}", routeContext -> {
             System.out.println("hellloooo");
             int id = routeContext.getParameter("id").toInt();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String readData = routeContext.getRequest().getBody();
+            System.out.println(readData);
+            Student student = null;
+
+            try {
+                student = objectMapper.readValue(readData, Student.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
             System.out.println("id i get issssssssssssssss: " + id);
-            crudService.updateCollection(id);
-            routeContext.send("Updated Successfully");
+            String response = crudService.updateCollection(id,student);
+            routeContext.send(response);
         });
 
 

@@ -64,24 +64,36 @@ public class CrudCollectionsImpl implements CrudCollections {
     }
 
     @Override
-    public void updateCollection(MongoClient mongoClient, int id) {
+    public String updateCollection(MongoClient mongoClient, int id, Student student) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
-        BasicDBObject searchQry = new BasicDBObject("id", 3);
+        Document doc = (Document) collection.find(eq("id", id)).first();
+        if(doc==null){
+            return "No record found";
+        }
+
+        BasicDBObject searchQry = new BasicDBObject("id", id);
         BasicDBObject updateFields = new BasicDBObject();
-        updateFields.append("firstname", "Neymar");
-        updateFields.append("lastname", "Junior");
-        updateFields.append("age", 12);
+        updateFields.append("firstname", student.getFirstname());
+        updateFields.append("lastname", student.getLastname());
+        updateFields.append("age", student.getAge());
         BasicDBObject setQuery = new BasicDBObject();
         setQuery.append("$set", updateFields);
         collection.updateOne(searchQry, setQuery);
+        return "Updated Successfully";
     }
 
     @Override
-    public long deleteCollection(MongoClient mongoClient, int id) {
+    public String deleteCollection(MongoClient mongoClient, int id) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
+
+        Document doc = (Document) collection.find(eq("id", id)).first();
+        if(doc==null){
+            return "No record found";
+        }
+
         collection.deleteOne(Filters.eq("id", id));
-        return collection.count();
+        return "Deletion Was Successful";
     }
 
     @Override
@@ -91,5 +103,7 @@ public class CrudCollectionsImpl implements CrudCollections {
         newdoc.append("firstname",student.getFirstname());
         newdoc.append("lastname",student.getLastname());
         newdoc.append("age",student.getAge());
+
+        collection.insertOne(newdoc);
     }
 }

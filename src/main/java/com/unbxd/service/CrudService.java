@@ -29,30 +29,40 @@ public class CrudService implements StudentService{
         return crud.readCollection(mongoClient, id);
     }
 
-    public boolean updateCollection(int id) {
+    @Override
+    public String updateCollection(int id, Student student) {
+        /*
         if (((Object) id).getClass().getSimpleName() != "Integer") {
             return false;
         }
-        crud.updateCollection(mongoClient, id);
-        return true;
+
+         */
+        return crud.updateCollection(mongoClient, id, student);
+        //return true;
     }
 
-    public boolean deleteCollection ( int id){
+    @Override
+    public String deleteCollection (int id){
+        /*
         if (((Object) id).getClass().getSimpleName() != "Integer") {
             return false;
         }
-        crud.deleteCollection(mongoClient,id);
-        return true;
+         */
+        return crud.deleteCollection(mongoClient,id);
+        //return true;
     }
 
-
-    public boolean insetNew (Student student){
+    @Override
+    public void insetNew(Student student){
+        crud.insetNew(mongoClient, student);
+        /*
         if (validate(student)) {
             crud.insetNew(mongoClient, student);
             return true;
         } else {
             return false;
         }
+        */
     }
 
     public boolean validate (Student student){

@@ -1,10 +1,12 @@
 package com.unbxd.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.client.MongoCollection;
+import com.unbxd.model.Student;
 
 public interface StudentService {
     void insertInTo(MongoCollection collection);
-    Object readCollection(int id) throws JsonProcessingException;
-    boolean updateCollection(int id);
+
+    String deleteCollection (int id);
+    String updateCollection(int id, Student student);
+    void insetNew (Student student);
 }
