@@ -5,6 +5,9 @@ import com.mongodb.MongoClientURI;
 
 public class MongoClient {
     public com.mongodb.MongoClient getClient(){
-        return new com.mongodb.MongoClient(new MongoClientURI("mongodb://localhost:27017"));
+        return new com.mongodb.MongoClient(new MongoClientURI("mongodb://mongo:27017"));
     }
 }
+
+
+

@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  java-api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8338:8338"
+    container_name: java-api
+    links:
+      - mongo
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongo
