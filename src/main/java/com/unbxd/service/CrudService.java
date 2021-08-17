@@ -2,7 +2,7 @@ package com.unbxd.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.client.MongoCollection;
-import com.unbxd.dao.CrudCollections;
+import com.unbxd.dao.StudentCollections;
 import com.unbxd.dao.CrudCollectionsImpl;
 import com.unbxd.model.Student;
 import com.unbxd.util.MongoClient;
@@ -10,7 +10,7 @@ import com.unbxd.util.MongoClient;
 import javax.inject.Inject;
 
 public class CrudService implements StudentService{
-    private CrudCollections crud = new CrudCollectionsImpl();
+    private StudentCollections crud = new CrudCollectionsImpl();
     private com.mongodb.MongoClient mongoClient;
 
     @Inject

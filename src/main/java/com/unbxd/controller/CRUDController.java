@@ -10,59 +10,19 @@ import org.slf4j.LoggerFactory;
 import ro.pippo.core.Application;
 
 
-public class BasicApplication extends Application {
+public class CRUDController extends Application {
 
-    private static final Logger log = LoggerFactory.getLogger(BasicApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(CRUDController.class);
 
     private final CrudService crudService;
 
     @Inject
-    public BasicApplication(CrudService cdService){
+    public CRUDController(CrudService cdService){
         this.crudService = cdService;
     }
 
     @Override
     protected void onInit() {
-
-        // send 'Hello World' as response
-
-
-        /*
-        GET("/student.*", routeContext -> {
-            if (routeContext.getSession("username") == null) {
-                routeContext.setSession("originalDestination", routeContext.getRequest().getApplicationUriWithQuery());
-                routeContext.redirect("/login");
-            } else {
-                routeContext.next();
-            }
-        });
-
-
-        POST("/login", new RouteHandler() {
-
-            @Override
-            public void handle(RouteContext routeContext) {
-                String username = routeContext.getParameter("username").toString();
-                String password = routeContext.getParameter("password").toString();
-                if (authenticate(username, password)) {
-                    String originalDestination = routeContext.removeSession("originalDestination");
-                    routeContext.resetSession();
-
-                    routeContext.setSession("username", username);
-                    routeContext.redirect(originalDestination != null ? originalDestination : "/contacts");
-                } else {
-                    routeContext.flashError("Authentication failed");
-                    routeContext.redirect("/login");
-                }
-            }
-
-            private boolean authenticate(String username, String password) {
-                return !username.isEmpty() && !password.isEmpty();
-            }
-
-        });
-        */
-
 
         POST("/student", routeContext -> {
 

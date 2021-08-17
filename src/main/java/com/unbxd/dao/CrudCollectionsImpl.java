@@ -15,7 +15,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CrudCollectionsImpl implements CrudCollections {
+public class CrudCollectionsImpl implements StudentCollections {
 
     @Override
     public void insetInTo(MongoClient mongoClient) {
