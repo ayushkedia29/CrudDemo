@@ -33,6 +33,7 @@ public class CRUDController extends Application {
             try {
                 student = objectMapper.readValue(readData, Student.class);
             } catch (JsonProcessingException e) {
+                routeContext.send("Invalid Input");
                 e.printStackTrace();
             }
             crudService.insetNew(student);
@@ -53,13 +54,12 @@ public class CRUDController extends Application {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-            if(student instanceof String){
-                String stud = (String) student;
-                routeContext.send(stud);
+            if(student instanceof Boolean){
+                routeContext.send("No Record Found");
             }
             else {
                 Student stud = (Student) student;
-                routeContext.json().send(student);
+                routeContext.json().send(stud);
             }
         });
 
@@ -68,8 +68,13 @@ public class CRUDController extends Application {
             int id = routeContext.getParameter("id").toInt();
 
             System.out.println("id i get issssssssssssssss: " + id);
-            String response = crudService.deleteCollection(id);
-            routeContext.send(response);
+            Boolean response = crudService.deleteCollection(id);
+            if(response){
+                routeContext.send("Deleted Successfully");
+            }else{
+                routeContext.send("No record found");
+            }
+
         });
 
         POST("/student/update/{id}", routeContext -> {
@@ -84,12 +89,17 @@ public class CRUDController extends Application {
             try {
                 student = objectMapper.readValue(readData, Student.class);
             } catch (JsonProcessingException e) {
+                routeContext.send("Invalid Input");
                 e.printStackTrace();
             }
 
             System.out.println("id i get issssssssssssssss: " + id);
-            String response = crudService.updateCollection(id,student);
-            routeContext.send(response);
+            Boolean response = crudService.updateCollection(id,student);
+            if(response){
+                routeContext.send("updated Successfully");
+            }else{
+                routeContext.send("No record found");
+            }
         });
 
 

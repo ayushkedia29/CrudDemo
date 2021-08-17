@@ -1,60 +1,54 @@
 package com.unbxd.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mongodb.client.MongoCollection;
 import com.unbxd.dao.StudentCollections;
-import com.unbxd.dao.CrudCollectionsImpl;
+import com.unbxd.dao.MongoStudentImpl;
 import com.unbxd.model.Student;
-import com.unbxd.util.MongoClient;
 
 import javax.inject.Inject;
 
 public class CrudService implements StudentService{
-    private StudentCollections crud = new CrudCollectionsImpl();
+    private StudentCollections crud;
     private com.mongodb.MongoClient mongoClient;
 
     @Inject
-    public CrudService(MongoClient mgClient){
-        this.mongoClient = mgClient.getClient();
-        this.crud.insetInTo(this.mongoClient);
+    public CrudService(MongoStudentImpl crudops){
+        this.crud = crudops;
+        this.crud.insetInTo();
     }
 
-    @Override
-    public void insertInTo(MongoCollection collection) {
-        crud.insetInTo(mongoClient);
-    }
 
     public Object readCollection(int id) throws JsonProcessingException {
 
-        return crud.readCollection(mongoClient, id);
+        return crud.readCollection(id);
     }
 
     @Override
-    public String updateCollection(int id, Student student) {
+    public boolean updateCollection(int id, Student student) {
         /*
         if (((Object) id).getClass().getSimpleName() != "Integer") {
             return false;
         }
 
          */
-        return crud.updateCollection(mongoClient, id, student);
+        return crud.updateCollection(id, student);
         //return true;
     }
 
     @Override
-    public String deleteCollection (int id){
+    public boolean deleteCollection (int id){
         /*
         if (((Object) id).getClass().getSimpleName() != "Integer") {
             return false;
         }
          */
-        return crud.deleteCollection(mongoClient,id);
+        return crud.deleteCollection(id);
         //return true;
     }
 
     @Override
     public void insetNew(Student student){
-        crud.insetNew(mongoClient, student);
+        crud.insetNew(student);
         /*
         if (validate(student)) {
             crud.insetNew(mongoClient, student);

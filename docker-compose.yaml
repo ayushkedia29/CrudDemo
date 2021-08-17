@@ -6,7 +6,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "127.0.0.1:8338:8338"
+      - "8338:8338"
     container_name: java-api
     expose:
       - "8338"

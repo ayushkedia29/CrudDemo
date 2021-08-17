@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -12,13 +13,18 @@ import com.unbxd.model.Student;
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.combine;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CrudCollectionsImpl implements StudentCollections {
+public class MongoStudentImpl implements StudentCollections {
+    private MongoClient mongoClient;
+
+    @Inject
+    public MongoStudentImpl(com.unbxd.util.MongoClient mgClient){
+        this.mongoClient = mgClient.getClient();
+    }
 
     @Override
-    public void insetInTo(MongoClient mongoClient) {
+    public void insetInTo() {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document cr = new Document("id",1);
         cr.append("firstname","Cristiano");
@@ -43,11 +49,11 @@ public class CrudCollectionsImpl implements StudentCollections {
 
     @Override
 
-    public Object readCollection(MongoClient mongoClient, int id) throws JsonProcessingException {
+    public Object readCollection(int id) throws JsonProcessingException {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
-            return "No record found";
+            return false;
         }
         System.out.println(doc);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,12 +70,12 @@ public class CrudCollectionsImpl implements StudentCollections {
     }
 
     @Override
-    public String updateCollection(MongoClient mongoClient, int id, Student student) {
+    public boolean updateCollection(int id, Student student) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
-            return "No record found";
+            return false;
         }
 
         BasicDBObject searchQry = new BasicDBObject("id", id);
@@ -80,24 +86,24 @@ public class CrudCollectionsImpl implements StudentCollections {
         BasicDBObject setQuery = new BasicDBObject();
         setQuery.append("$set", updateFields);
         collection.updateOne(searchQry, setQuery);
-        return "Updated Successfully";
+        return true;
     }
 
     @Override
-    public String deleteCollection(MongoClient mongoClient, int id) {
+    public boolean deleteCollection(int id) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
-            return "No record found";
+            return false;
         }
 
         collection.deleteOne(Filters.eq("id", id));
-        return "Deletion Was Successful";
+        return true;
     }
 
     @Override
-    public void insetNew(MongoClient mongoClient, Student student) {
+    public void insetNew(Student student) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document newdoc = new Document("id",student.getId());
         newdoc.append("firstname",student.getFirstname());
@@ -106,4 +112,5 @@ public class CrudCollectionsImpl implements StudentCollections {
 
         collection.insertOne(newdoc);
     }
+
 }
