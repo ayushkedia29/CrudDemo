@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 public class StudentServiceImpl implements StudentService{
     private StudentDao crud;
-    private com.mongodb.MongoClient mongoClient;
 
     @Inject
     public StudentServiceImpl(MongoStudentDaoImpl crudops){
@@ -18,8 +17,8 @@ public class StudentServiceImpl implements StudentService{
 
     }
 
-
-    public Object readCollection(int id) throws JsonProcessingException {
+    @Override
+    public Student readCollection(int id) throws JsonProcessingException {
 
         return crud.readCollection(id);
     }
@@ -44,18 +43,6 @@ public class StudentServiceImpl implements StudentService{
 
     }
 
-    public boolean validate (Student student){
-        if (((Object) student.getId()).getClass().getSimpleName() != "Integer") {
-            return false;
-        } else if (student.getLastname().getClass().getSimpleName() != "String") {
-            return false;
-        } else if (student.getFirstname().getClass().getSimpleName() != "String") {
-            return false;
-        } else if (((Object) student.getAge()).getClass().getSimpleName() != "Integer") {
-            return false;
-        }
-        return true;
-    }
 }
 
 
