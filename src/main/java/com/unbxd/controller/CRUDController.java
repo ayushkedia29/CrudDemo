@@ -8,6 +8,10 @@ import com.unbxd.service.StudentServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.pippo.core.Application;
+import ro.pippo.core.Response;
+
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class CRUDController extends Application {
@@ -32,6 +36,7 @@ public class CRUDController extends Application {
             try {
                 student = objectMapper.readValue(readData, Student.class);
             } catch (JsonProcessingException e) {
+                routeContext.status(400);
                 routeContext.send("Invalid Input");
                 e.printStackTrace();
             }
@@ -42,7 +47,6 @@ public class CRUDController extends Application {
 
         GET("/student/read/{id}", routeContext -> {
             int id = routeContext.getParameter("id").toInt();
-
             Student student = null;
             try {
                 student = (Student) crudService.readCollection(id);
@@ -50,6 +54,8 @@ public class CRUDController extends Application {
                 e.printStackTrace();
             }
             if(student==null){
+                //
+                routeContext.status(400);
                 routeContext.send("No Record Found");
             }
             else {
@@ -66,6 +72,7 @@ public class CRUDController extends Application {
             if(response){
                 routeContext.send("Deleted Successfully");
             }else{
+                routeContext.status(400);
                 routeContext.send("No record found");
             }
 
@@ -82,6 +89,7 @@ public class CRUDController extends Application {
             try {
                 student = objectMapper.readValue(readData, Student.class);
             } catch (JsonProcessingException e) {
+                routeContext.status(400);
                 routeContext.send("Invalid Input");
                 e.printStackTrace();
             }
@@ -90,6 +98,7 @@ public class CRUDController extends Application {
             if(response){
                 routeContext.send("updated Successfully");
             }else{
+                routeContext.status(400);
                 routeContext.send("No record found");
             }
         });

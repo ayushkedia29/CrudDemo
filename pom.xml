@@ -90,6 +90,10 @@
             <resource>
                 <directory>src/main/java</directory>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes></excludes>
+            </resource>
         </resources>
         <plugins>
             <plugin>

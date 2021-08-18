@@ -75,6 +75,10 @@ public class MongoStudentDaoImpl implements StudentDao {
     @Override
     public void insetNew(Student student) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
+        Document doc = (Document) collection.find(eq("id", student.getId())).first();
+        if(doc!=null){
+            collection.deleteOne(Filters.eq("id", student.getId()));
+        }
         Document newdoc = new Document("id",student.getId());
         newdoc.append("firstname",student.getFirstname());
         newdoc.append("lastname",student.getLastname());
