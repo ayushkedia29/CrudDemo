@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8338:8338"
-    container_name: java-api
+    container_name: CrudDemo
     expose:
       - "8338"
     links:

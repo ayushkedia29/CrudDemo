@@ -1,20 +1,21 @@
 package com.unbxd.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.unbxd.dao.StudentCollections;
-import com.unbxd.dao.MongoStudentImpl;
+import com.unbxd.dao.StudentDao;
+import com.unbxd.dao.MongoStudentDaoImpl;
 import com.unbxd.model.Student;
 
 import javax.inject.Inject;
 
-public class CrudService implements StudentService{
-    private StudentCollections crud;
+public class StudentServiceImpl implements StudentService{
+    private StudentDao crud;
     private com.mongodb.MongoClient mongoClient;
 
     @Inject
-    public CrudService(MongoStudentImpl crudops){
+    public StudentServiceImpl(MongoStudentDaoImpl crudops){
+
         this.crud = crudops;
-        this.crud.insetInTo();
+
     }
 
 
@@ -25,38 +26,22 @@ public class CrudService implements StudentService{
 
     @Override
     public boolean updateCollection(int id, Student student) {
-        /*
-        if (((Object) id).getClass().getSimpleName() != "Integer") {
-            return false;
-        }
 
-         */
         return crud.updateCollection(id, student);
-        //return true;
+
     }
 
     @Override
     public boolean deleteCollection (int id){
-        /*
-        if (((Object) id).getClass().getSimpleName() != "Integer") {
-            return false;
-        }
-         */
+
         return crud.deleteCollection(id);
-        //return true;
+
     }
 
     @Override
     public void insetNew(Student student){
         crud.insetNew(student);
-        /*
-        if (validate(student)) {
-            crud.insetNew(mongoClient, student);
-            return true;
-        } else {
-            return false;
-        }
-        */
+
     }
 
     public boolean validate (Student student){
