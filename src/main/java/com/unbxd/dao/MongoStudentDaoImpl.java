@@ -26,7 +26,7 @@ public class MongoStudentDaoImpl implements StudentDao {
 
     @Override
 
-    public Student readCollection(int id) throws JsonProcessingException {
+    public Student readDB(int id) throws JsonProcessingException {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
@@ -39,7 +39,7 @@ public class MongoStudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public boolean updateCollection(int id, Student student) {
+    public boolean updateDB(int id, Student student) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
         Document doc = (Document) collection.find(eq("id", id)).first();
@@ -59,7 +59,7 @@ public class MongoStudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public boolean deleteCollection(int id) {
+    public boolean deleteDB(int id) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
         Document doc = (Document) collection.find(eq("id", id)).first();
@@ -72,7 +72,7 @@ public class MongoStudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void insetNew(Student student) {
+    public void insetDB(Student student) {
         MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document doc = (Document) collection.find(eq("id", student.getId())).first();
         if(doc!=null){

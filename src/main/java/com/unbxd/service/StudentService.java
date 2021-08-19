@@ -8,5 +8,5 @@ public interface StudentService {
     Student readCollection(int id) throws JsonProcessingException;
     boolean deleteCollection (int id);
     boolean updateCollection(int id, Student student);
-    void insetNew (Student student);
+    boolean insetNew (String readData);
 }

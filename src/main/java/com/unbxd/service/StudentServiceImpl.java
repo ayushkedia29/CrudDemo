@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.unbxd.dao.StudentDao;
 import com.unbxd.dao.MongoStudentDaoImpl;
 import com.unbxd.model.Student;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.inject.Inject;
 
 public class StudentServiceImpl implements StudentService{
@@ -12,7 +12,6 @@ public class StudentServiceImpl implements StudentService{
 
     @Inject
     public StudentServiceImpl(MongoStudentDaoImpl crudops){
-
         this.crud = crudops;
 
     }
@@ -20,29 +19,36 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public Student readCollection(int id) throws JsonProcessingException {
 
-        return crud.readCollection(id);
+        return crud.readDB(id);
     }
 
     @Override
     public boolean updateCollection(int id, Student student) {
 
-        return crud.updateCollection(id, student);
+        return crud.updateDB(id, student);
 
     }
 
     @Override
     public boolean deleteCollection (int id){
 
-        return crud.deleteCollection(id);
+        return crud.deleteDB(id);
 
     }
 
     @Override
-    public void insetNew(Student student){
-        crud.insetNew(student);
+    public boolean insetNew(String readData){
+        Student student = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            student = objectMapper.readValue(readData, Student.class);
+            crud.insetDB(student);
+            return true;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 
 }
-
-

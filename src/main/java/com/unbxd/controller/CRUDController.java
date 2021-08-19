@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.pippo.core.Application;
 
-
 public class CRUDController extends Application {
 
     private static final Logger log = LoggerFactory.getLogger(CRUDController.class);
@@ -26,19 +25,19 @@ public class CRUDController extends Application {
 
         POST("/student", routeContext -> {
 
-            ObjectMapper objectMapper = new ObjectMapper();
             String readData = routeContext.getRequest().getBody();
-            Student student = null;
-            try {
-                student = objectMapper.readValue(readData, Student.class);
-            } catch (JsonProcessingException e) {
-                routeContext.status(400);
-                routeContext.send("Invalid Input");
-                e.printStackTrace();
-            }
-            crudService.insetNew(student);
 
-            routeContext.send("New document added successfully");
+            boolean response = crudService.insetNew(readData);
+
+            if(response==true){
+                routeContext.send("New document added successfully");
+            }
+            else{
+                routeContext.status(400);
+                routeContext.send("Invalid document");
+            }
+
+
         });
 
         GET("/student/read/{id}", routeContext -> {
