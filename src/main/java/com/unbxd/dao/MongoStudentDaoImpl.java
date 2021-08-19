@@ -17,7 +17,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MongoStudentDaoImpl implements StudentDao {
-    private MongoClient mongoClient;
+    private final MongoClient mongoClient;
 
     @Inject
     public MongoStudentDaoImpl(MongoStandAloneClient mgClient){
@@ -34,9 +34,8 @@ public class MongoStudentDaoImpl implements StudentDao {
         }
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        Student student = objectMapper.readValue(doc.toJson(), Student.class);
 
-        return student;
+        return objectMapper.readValue(doc.toJson(), Student.class);
     }
 
     @Override

@@ -8,10 +8,6 @@ import com.unbxd.service.StudentServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.pippo.core.Application;
-import ro.pippo.core.Response;
-
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
 
 
 public class CRUDController extends Application {
@@ -49,18 +45,16 @@ public class CRUDController extends Application {
             int id = routeContext.getParameter("id").toInt();
             Student student = null;
             try {
-                student = (Student) crudService.readCollection(id);
+                student = crudService.readCollection(id);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
             if(student==null){
-                //
-                routeContext.status(400);
+
                 routeContext.send("No Record Found");
             }
             else {
-                Student stud = student;
-                routeContext.json().send(stud);
+                routeContext.json().send(student);
             }
         });
 
@@ -68,7 +62,7 @@ public class CRUDController extends Application {
 
             int id = routeContext.getParameter("id").toInt();
 
-            Boolean response = crudService.deleteCollection(id);
+            boolean response = crudService.deleteCollection(id);
             if(response){
                 routeContext.send("Deleted Successfully");
             }else{
@@ -94,7 +88,7 @@ public class CRUDController extends Application {
                 e.printStackTrace();
             }
 
-            Boolean response = crudService.updateCollection(id,student);
+            boolean response = crudService.updateCollection(id,student);
             if(response){
                 routeContext.send("updated Successfully");
             }else{
