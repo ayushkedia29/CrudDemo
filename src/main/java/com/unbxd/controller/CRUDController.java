@@ -74,25 +74,16 @@ public class CRUDController extends Application {
         POST("/student/update/{id}", routeContext -> {
             int id = routeContext.getParameter("id").toInt();
 
-            ObjectMapper objectMapper = new ObjectMapper();
             String readData = routeContext.getRequest().getBody();
 
-            Student student = null;
+            boolean response = crudService.updateCollection(id,readData);
 
-            try {
-                student = objectMapper.readValue(readData, Student.class);
-            } catch (JsonProcessingException e) {
-                routeContext.status(400);
-                routeContext.send("Invalid Input");
-                e.printStackTrace();
-            }
-
-            boolean response = crudService.updateCollection(id,student);
             if(response){
                 routeContext.send("updated Successfully");
             }else{
                 routeContext.status(400);
-                routeContext.send("No record found");
+                routeContext.send("No record found or Invalid Input");
+
             }
         });
 

@@ -23,9 +23,17 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public boolean updateCollection(int id, Student student) {
+    public boolean updateCollection(int id, String readData) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Student student = null;
+        try {
+            student = objectMapper.readValue(readData, Student.class);
+            return crud.updateDB(id, student);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
 
-        return crud.updateDB(id, student);
 
     }
 
