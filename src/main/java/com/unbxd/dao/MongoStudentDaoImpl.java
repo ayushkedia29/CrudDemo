@@ -18,16 +18,17 @@ import static com.mongodb.client.model.Filters.eq;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MongoStudentDaoImpl implements StudentDao {
     private final MongoClient mongoClient;
+    private MongoCollection collection;
 
     @Inject
     public MongoStudentDaoImpl(MongoStandAloneClient mgClient){
         this.mongoClient = mgClient.getClient();
+         this.collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
     }
 
     @Override
 
     public Student readDB(int id) throws JsonProcessingException {
-        MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
             return null;
@@ -40,7 +41,6 @@ public class MongoStudentDaoImpl implements StudentDao {
 
     @Override
     public boolean updateDB(int id, Student student) {
-        MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
@@ -60,7 +60,6 @@ public class MongoStudentDaoImpl implements StudentDao {
 
     @Override
     public boolean deleteDB(int id) {
-        MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
 
         Document doc = (Document) collection.find(eq("id", id)).first();
         if(doc==null){
@@ -73,7 +72,6 @@ public class MongoStudentDaoImpl implements StudentDao {
 
     @Override
     public void insetDB(Student student) {
-        MongoCollection collection = mongoClient.getDatabase("db1").getCollection("Student_Collection");
         Document doc = (Document) collection.find(eq("id", student.getId())).first();
         if(doc!=null){
             collection.deleteOne(Filters.eq("id", student.getId()));

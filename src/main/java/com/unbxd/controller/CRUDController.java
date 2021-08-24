@@ -1,7 +1,6 @@
 package com.unbxd.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.unbxd.model.Student;
 import com.unbxd.service.StudentServiceImpl;
@@ -27,7 +26,14 @@ public class CRUDController extends Application {
 
             String readData = routeContext.getRequest().getBody();
 
-            boolean response = crudService.insetNew(readData);
+            boolean response = false;
+            try{
+                response = crudService.insetNew(readData);
+            }catch(Exception e){
+                routeContext.status(500);
+                routeContext.send("Internal Error");
+                e.printStackTrace();
+            }
 
             if(response==true){
                 routeContext.send("New document added successfully");
@@ -45,7 +51,9 @@ public class CRUDController extends Application {
             Student student = null;
             try {
                 student = crudService.readCollection(id);
-            } catch (JsonProcessingException e) {
+            } catch (Exception e) {
+                routeContext.status(500);
+                routeContext.send("Internal Error");
                 e.printStackTrace();
             }
             if(student==null){
@@ -60,8 +68,15 @@ public class CRUDController extends Application {
         GET("/student/delete/{id}", routeContext -> {
 
             int id = routeContext.getParameter("id").toInt();
+            boolean response = false;
+            try{
+                response = crudService.deleteCollection(id);
+            }catch(Exception e){
+                routeContext.status(500);
+                routeContext.send("Internal Error");
+                e.printStackTrace();
+            }
 
-            boolean response = crudService.deleteCollection(id);
             if(response){
                 routeContext.send("Deleted Successfully");
             }else{
@@ -76,7 +91,14 @@ public class CRUDController extends Application {
 
             String readData = routeContext.getRequest().getBody();
 
-            boolean response = crudService.updateCollection(id,readData);
+            boolean response = false;
+            try{
+                response = crudService.updateCollection(id,readData);
+            }catch(Exception e){
+                routeContext.status(500);
+                routeContext.send("Internal Error");
+                e.printStackTrace();
+            }
 
             if(response){
                 routeContext.send("updated Successfully");
